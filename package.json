@@ -37,6 +37,7 @@
         "@semantic-release/git",
         {
           "assets": [
+            "dist/",
             "action.yml",
             "package.json"
           ]
