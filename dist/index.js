@@ -407,9 +407,9 @@ function fileExists(path) {
   return new Promise((resolve, reject) => {
     stat(path, (err, stats) => {
       if (err) {
-        return reject(err)
+        return resolve(false)
       } else {
-        return resolve(stat.isFile())
+        return resolve(stats.isFile())
       }
     })
   })
@@ -422,7 +422,7 @@ async function findManifest(workspace, rdnn) {
     `${rdnn}.yaml`
   ]
 
-  for (const p in possibleFiles) {
+  for (const p of possibleFiles) {
     const fullPath = resolve(workspace, p)
 
     if (await fileExists(fullPath)) {
