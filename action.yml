@@ -1,0 +1,29 @@
+---
+
+# https://help.github.com/en/articles/metadata-syntax-for-github-actions
+
+name: appcenter-review-find-manifest
+description: Finds the flatpak manifest in a repository
+author: elementary
+
+branding:
+  icon: crosshair
+  color: green
+
+runs:
+  using: node12
+  main: dist/index.js
+
+inputs:
+  rdnn:
+    description: The RDNN of the application we are reviewing
+    required: true
+
+  workspace:
+    description: The git repository to parse for files
+    required: false
+    default: ${{ github.workspace }}
+
+outputs:
+  manifest:
+    description: The path of the manifest file
