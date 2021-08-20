@@ -419,7 +419,13 @@ async function findManifest(workspace, rdnn) {
   const possibleFiles = [
     `${rdnn}.json`,
     `${rdnn}.yml`,
-    `${rdnn}.yaml`
+    `${rdnn}.yaml`,
+    `elementary/${rdnn}.json`,
+    `elementary/${rdnn}.yml`,
+    `elementary/${rdnn}.yaml`,
+    `flatpak/${rdnn}.json`,
+    `flatpak/${rdnn}.yml`,
+    `flatpak/${rdnn}.yaml`
   ]
 
   for (const p of possibleFiles) {
