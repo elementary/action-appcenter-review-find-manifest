@@ -1,47 +1,59 @@
-name: "test"
-on: # rebuild any PRs and main branch changes
+name: "Integration Tests"
+on:
   pull_request:
   push:
     branches:
       - main
 
 jobs:
-  music:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          repository: "elementary/music"
-      - uses: actions/checkout@v3
-        with:
-          path: "action-under-test"
-      - uses: ./action-under-test
-        id: manifest
-        with:
-          rdnn: "io.elementary.music"
-      - name: Test Result
-        uses: actions/github-script@v3
-        if: ${{ steps.manifest.outputs.manifest != 'io.elementary.music.yml' }}
-        with:
-          script: |
-            core.setFailed("Couldn't find manifest")
+  tests:
+    strategy:
+      matrix:
+        test-repo:
+          - repo: elementary/music
+            rdnn: io.elementary.music
+            path: io.elementary.music.yml
+          - repo: elementary/mail
+            rdnn: io.elementary.mail
+            path: io.elementary.mail.json
 
-  mail:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
         with:
-          repository: "elementary/mail"
-      - uses: actions/checkout@v3
+          node-version: 16.x
+
+      - name: Checkout Test Repo
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ matrix.test-repo.repo }}
+
+      - name: Checkout Action Repo
+        uses: actions/checkout@v3
         with:
           path: "action-under-test"
-      - uses: ./action-under-test
+
+      - name: Install deps
+        run: |
+          cd action-under-test
+          npm ci
+      - name: Build Action
+        env:
+          NODE_ENV: production
+        run: |
+          cd action-under-test
+          npm run build
+
+      - name: Run Action
+        uses: ./action-under-test
         id: manifest
         with:
-          rdnn: "io.elementary.mail"
-      - name: Test Result
+          rdnn: ${{ matrix.test-repo.rdnn }}
+
+      - name: Check Test Result
         uses: actions/github-script@v3
-        if: ${{ steps.manifest.outputs.manifest != 'io.elementary.mail.json' }}
+        if: ${{ steps.manifest.outputs.manifest != matrix.test-repo.path }}
         with:
           script: |
             core.setFailed("Couldn't find manifest")
