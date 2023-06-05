@@ -1,0 +1,47 @@
+name: "test"
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  music:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: "elementary/music"
+      - uses: actions/checkout@v3
+        with:
+          path: "action-under-test"
+      - uses: ./action-under-test
+        id: manifest
+        with:
+          rdnn: "io.elementary.music"
+      - name: Test Result
+        uses: actions/github-script@v3
+        if: ${{ steps.manifest.outputs.manifest != 'io.elementary.music.yml' }}
+        with:
+          script: |
+            core.setFailed("Couldn't find manifest")
+
+  mail:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: "elementary/mail"
+      - uses: actions/checkout@v3
+        with:
+          path: "action-under-test"
+      - uses: ./action-under-test
+        id: manifest
+        with:
+          rdnn: "io.elementary.mail"
+      - name: Test Result
+        uses: actions/github-script@v3
+        if: ${{ steps.manifest.outputs.manifest != 'io.elementary.mail.json' }}
+        with:
+          script: |
+            core.setFailed("Couldn't find manifest")
