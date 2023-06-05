@@ -52,7 +52,7 @@ jobs:
           rdnn: ${{ matrix.test-repo.rdnn }}
 
       - name: Check Test Result
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6
         if: ${{ steps.manifest.outputs.manifest != matrix.test-repo.path }}
         with:
           script: |
