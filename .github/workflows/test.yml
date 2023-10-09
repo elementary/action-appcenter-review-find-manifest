@@ -25,12 +25,12 @@ jobs:
           node-version: 20.x
 
       - name: Checkout Test Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ matrix.test-repo.repo }}
 
       - name: Checkout Action Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: "action-under-test"
 
