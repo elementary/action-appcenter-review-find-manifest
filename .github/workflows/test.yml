@@ -22,15 +22,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24.x
+          node-version: "lts/*"
 
       - name: Checkout Test Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: ${{ matrix.test-repo.repo }}
 
       - name: Checkout Action Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: "action-under-test"
 
