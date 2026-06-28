@@ -1,4 +1,4 @@
-const core = require('@actions/core')
+let core
 const { stat } = require('fs')
 const { relative, resolve } = require('path')
 
@@ -39,6 +39,7 @@ async function findManifest(workspace, rdnn) {
 }
 
 async function run () {
+  core = await import('@actions/core')
   const rdnn = core.getInput('rdnn', { required: true })
   const workspace = core.getInput('workspace', { required: true })
 
